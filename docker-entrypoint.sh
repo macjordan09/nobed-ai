@@ -7,10 +7,10 @@ DB_PATH=$(echo "${DATABASE_URL:-file:/data/nobed.db}" | sed 's|^file:||')
 echo "==> Syncing database schema ($DB_PATH)"
 npx prisma db push --skip-generate
 
-if [ ! -s "$DB_PATH.seeded" ]; then
+if [ ! -f "$DB_PATH.seeded" ]; then
   echo "==> First run: seeding demo data"
   node prisma/seed.mjs
-  touch "$DB_PATH.seeded"
+  date > "$DB_PATH.seeded"
 else
   echo "==> Database already seeded, skipping"
 fi
