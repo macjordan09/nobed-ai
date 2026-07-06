@@ -1,13 +1,13 @@
 // NoBed.ai — Ghana real-time hospital bed availability & referral platform
-// SQLite for the MVP. In production this maps to PostgreSQL + PostGIS (lat/lng
-// would become a geography(Point) column; see DATABASE.md).
+// PostgreSQL (Neon in production, Docker locally: `docker start nobed-pg`).
+// PostGIS upgrade path: lat/lng → geography(Point); see DATABASE.md.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

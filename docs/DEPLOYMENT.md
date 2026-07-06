@@ -6,46 +6,48 @@ path to a full production deployment.
 
 ---
 
-## 0. Host the demo online (fastest path — container + volume)
+## 0. Host online — Vercel + Postgres (current setup)
 
-The app writes to SQLite, so host it as a **container with a persistent volume** (Railway,
-Fly.io, or Render). A production [`Dockerfile`](../Dockerfile) + [`docker-entrypoint.sh`](../docker-entrypoint.sh)
-are included: on first boot the container pushes the schema and seeds the 17 demo hospitals
-into `/data/nobed.db`, then serves on `$PORT`.
+The app now runs on **PostgreSQL** (migrated from SQLite). Local dev uses a Docker Postgres;
+production uses **Neon** (or Vercel Postgres) with the app on **Vercel**.
 
-> ⚠️ Vercel/Netlify (serverless) won't work as-is — their filesystems can't persist SQLite
-> writes. Use them only after the Postgres migration (section 2).
-
-**Railway (recommended — simplest)**
+**Local dev database** (already provisioned):
 ```bash
-# once: npm i -g @railway/cli && railway login
-cd nobed-ai
-railway init                       # create project
-railway volume add --mount-path /data
-railway variables --set AUTH_SECRET=$(openssl rand -hex 32)
-railway up                        # builds the Dockerfile and deploys
-railway domain                     # get your public URL
+docker start nobed-pg   # postgres:16 on localhost:5433 (user postgres / pw nobed / db nobed)
+# .env → DATABASE_URL="postgresql://postgres:nobed@localhost:5433/nobed"
 ```
 
-**Fly.io**
-```bash
-# once: brew install flyctl && fly auth login
-cd nobed-ai
-fly launch --no-deploy             # detects Dockerfile; pick a region (cdg/ams nearest Ghana)
-fly volumes create nobed_data --size 1
-# fly.toml: add  [mounts]  source="nobed_data"  destination="/data"
-fly secrets set AUTH_SECRET=$(openssl rand -hex 32)
-fly deploy
-```
+**Deploy to Vercel (one-time setup):**
+1. **Create the production DB** — https://neon.tech (free tier) → New project (region: EU, e.g.
+   Frankfurt — closest to Ghana) → copy the connection string (`postgresql://…?sslmode=require`).
+2. **Login + link** (interactive, run in a terminal):
+   ```bash
+   cd nobed-ai
+   npx vercel login
+   npx vercel link          # create/link the project
+   ```
+3. **Set env vars:**
+   ```bash
+   npx vercel env add DATABASE_URL production    # paste the Neon URL
+   npx vercel env add AUTH_SECRET production     # openssl rand -hex 32
+   ```
+4. **Push schema + seed Neon once** (from your machine):
+   ```bash
+   DATABASE_URL="<neon-url>" npx prisma db push
+   DATABASE_URL="<neon-url>" node prisma/seed.mjs
+   ```
+5. **Deploy:**
+   ```bash
+   npx vercel deploy --prod
+   ```
 
-**Render**: New → Web Service → connect the GitHub repo → environment: Docker → add a
-Disk mounted at `/data` (1 GB) → env var `AUTH_SECRET` → deploy. (Disks require a paid tier.)
+Build config is already in place: `build` runs `prisma generate && next build`, plus a
+`postinstall` generate for Vercel's cached installs. All DB-backed pages/APIs are dynamic
+(no build-time DB needed).
 
-**Verify locally first** (identical to production):
-```bash
-docker build -t nobed-ai .
-docker run --rm -p 3000:3000 -v nobed-data:/data -e AUTH_SECRET=demo nobed-ai
-```
+**Alternative: any Docker host** — the [`Dockerfile`](../Dockerfile) works on Railway/Fly/Render;
+set `DATABASE_URL` (Postgres) + `AUTH_SECRET`. The entrypoint pushes the schema and seeds only
+when the database is empty.
 
 Demo notes for a public URL: data is seeded demo data; the mock auth + demo passwords are
 fine for a pilot demo but see [SECURITY.md](SECURITY.md) before any real rollout.

@@ -8,8 +8,9 @@ is. It gives hospitals, ambulance teams, health administrators and the public a 
 colour-coded view of bed capacity, referral options and emergency care availability
 across the country — on the web **and** over SMS for low-connectivity users.
 
-This repository is a **runnable MVP demo**. It runs entirely locally with **zero external
-accounts** (SQLite database, OpenStreetMap tiles, mock auth, SMS simulator). The parts
+This repository is a **runnable MVP demo**. It runs locally with **no paid accounts**
+(PostgreSQL via Docker, OpenStreetMap tiles, mock auth, SMS simulator) and deploys to
+Vercel + Neon (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)). The parts
 that need real infrastructure in production (live SMS providers, managed auth with MFA,
 PostGIS, Redis, WebSockets) are documented in [`docs/`](docs/) with a clear migration path.
 
@@ -18,14 +19,18 @@ PostGIS, Redis, WebSockets) are documented in [`docs/`](docs/) with a clear migr
 ## Quick start
 
 ```bash
+# one-time: local Postgres (Docker)
+docker run -d --name nobed-pg -p 5433:5432 -e POSTGRES_PASSWORD=nobed \
+  -e POSTGRES_DB=nobed -v nobed-pg-data:/var/lib/postgresql/data postgres:16-alpine
+
 npm install
-npm run setup     # prisma generate + db push + seed (16 GH hospitals, 8 demo users)
+npm run setup     # prisma generate + db push + seed (17 GH hospitals, 9 demo users)
 npm run dev       # http://localhost:3000
 ```
 
-That's it. Open <http://localhost:3000>.
+That's it. Open <http://localhost:3000>. (Thereafter: `docker start nobed-pg` before dev.)
 
-> Requires Node 18+ (built and tested on Node 20/25). No API keys needed.
+> Requires Node 18+ and Docker (for Postgres). No API keys needed.
 
 ### Useful scripts
 
@@ -99,7 +104,7 @@ role to log in instantly, or use the credentials below.
 | Frontend | Next.js 14 (App Router), TypeScript, Tailwind | same |
 | Map | Leaflet + OpenStreetMap | Mapbox GL or Leaflet |
 | Charts | Recharts | same |
-| Database | SQLite + Prisma | PostgreSQL + PostGIS + Prisma |
+| Database | PostgreSQL + Prisma (Docker local / Neon prod) | + PostGIS geospatial |
 | Auth | Signed-cookie mock auth | Supabase Auth / Clerk + MFA + OTP |
 | SMS | In-app simulator | Africa's Talking / Hubtel / Arkesel |
 | Realtime | Server-rendered + refresh | WebSockets + Redis pub/sub |

@@ -1,18 +1,20 @@
 #!/bin/sh
 set -e
 
-# Resolve the SQLite file path from DATABASE_URL (file:/data/nobed.db)
-DB_PATH=$(echo "${DATABASE_URL:-file:/data/nobed.db}" | sed 's|^file:||')
-
-echo "==> Syncing database schema ($DB_PATH)"
+echo "==> Syncing database schema"
 npx prisma db push --skip-generate
 
-if [ ! -f "$DB_PATH.seeded" ]; then
-  echo "==> First run: seeding demo data"
+HOSPITALS=$(node -e "
+const { PrismaClient } = require('@prisma/client');
+const p = new PrismaClient();
+p.hospital.count().then(n => { console.log(n); return p.\$disconnect(); }).catch(() => { console.log('ERR'); process.exit(0); });
+")
+
+if [ "$HOSPITALS" = "0" ]; then
+  echo "==> Empty database: seeding demo data"
   node prisma/seed.mjs
-  date > "$DB_PATH.seeded"
 else
-  echo "==> Database already seeded, skipping"
+  echo "==> Database has $HOSPITALS hospitals, skipping seed"
 fi
 
 echo "==> Starting noBed.ai on port ${PORT:-3000}"

@@ -1,6 +1,6 @@
-# noBed.ai — production container
+# noBed.ai — production container (alternative to Vercel)
 # Works on Railway / Fly.io / Render / any Docker host.
-# SQLite lives on a volume at /data (set DATABASE_URL=file:/data/nobed.db).
+# Requires DATABASE_URL pointing at a PostgreSQL instance (e.g. Neon).
 
 FROM node:20-slim AS builder
 WORKDIR /app
@@ -23,10 +23,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/next.config.mjs ./
 COPY docker-entrypoint.sh ./
-RUN chmod +x docker-entrypoint.sh && mkdir -p /data
+RUN chmod +x docker-entrypoint.sh
 
-# Default DB location on the mounted volume
-ENV DATABASE_URL="file:/data/nobed.db"
+# Set DATABASE_URL (PostgreSQL) and AUTH_SECRET at runtime
 EXPOSE 3000
 
 CMD ["./docker-entrypoint.sh"]
