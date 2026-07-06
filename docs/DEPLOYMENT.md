@@ -1,7 +1,54 @@
 # Deployment guide
 
 This MVP is a single Next.js app. It runs locally with SQLite and no external services.
-This guide covers (1) running the demo and (2) the path to a production deployment.
+This guide covers (0) hosting the demo online now, (1) running it locally, and (2) the
+path to a full production deployment.
+
+---
+
+## 0. Host the demo online (fastest path — container + volume)
+
+The app writes to SQLite, so host it as a **container with a persistent volume** (Railway,
+Fly.io, or Render). A production [`Dockerfile`](../Dockerfile) + [`docker-entrypoint.sh`](../docker-entrypoint.sh)
+are included: on first boot the container pushes the schema and seeds the 17 demo hospitals
+into `/data/nobed.db`, then serves on `$PORT`.
+
+> ⚠️ Vercel/Netlify (serverless) won't work as-is — their filesystems can't persist SQLite
+> writes. Use them only after the Postgres migration (section 2).
+
+**Railway (recommended — simplest)**
+```bash
+# once: npm i -g @railway/cli && railway login
+cd nobed-ai
+railway init                       # create project
+railway volume add --mount-path /data
+railway variables --set AUTH_SECRET=$(openssl rand -hex 32)
+railway up                        # builds the Dockerfile and deploys
+railway domain                     # get your public URL
+```
+
+**Fly.io**
+```bash
+# once: brew install flyctl && fly auth login
+cd nobed-ai
+fly launch --no-deploy             # detects Dockerfile; pick a region (cdg/ams nearest Ghana)
+fly volumes create nobed_data --size 1
+# fly.toml: add  [mounts]  source="nobed_data"  destination="/data"
+fly secrets set AUTH_SECRET=$(openssl rand -hex 32)
+fly deploy
+```
+
+**Render**: New → Web Service → connect the GitHub repo → environment: Docker → add a
+Disk mounted at `/data` (1 GB) → env var `AUTH_SECRET` → deploy. (Disks require a paid tier.)
+
+**Verify locally first** (identical to production):
+```bash
+docker build -t nobed-ai .
+docker run --rm -p 3000:3000 -v nobed-data:/data -e AUTH_SECRET=demo nobed-ai
+```
+
+Demo notes for a public URL: data is seeded demo data; the mock auth + demo passwords are
+fine for a pilot demo but see [SECURITY.md](SECURITY.md) before any real rollout.
 
 ---
 
