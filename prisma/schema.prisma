@@ -3,7 +3,9 @@
 // PostGIS upgrade path: lat/lng → geography(Point); see DATABASE.md.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // Ensure the Linux engine ships to Vercel's serverless runtime (not just macOS "native").
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
