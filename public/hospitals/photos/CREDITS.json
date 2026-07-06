@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "korle-bu",
+    "title": "Korle Bu Teaching Hospital",
+    "image": "/hospitals/photos/korle-bu.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Fquasie",
+    "source": "https://commons.wikimedia.org/wiki/File:Korle-Bu_hospital.jpg"
+  },
+  {
+    "slug": "kath",
+    "title": "Komfo Anokye Teaching Hospital",
+    "image": "/hospitals/photos/kath.jpg",
+    "license": "CC BY 2.0",
+    "artist": "OER Africa",
+    "source": "https://commons.wikimedia.org/wiki/File:Komfo%20Anokye%20Teaching%20Hospital%2C%20Kumasi%2C%20Ghana.jpg"
+  },
+  {
+    "slug": "ugmc",
+    "title": "University of Ghana Medical Centre",
+    "image": "/hospitals/photos/ugmc.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Jwale2",
+    "source": "https://commons.wikimedia.org/wiki/File:University_of_Ghana_Medical_Centre_07.jpg"
+  },
+  {
+    "slug": "ridge",
+    "title": "Greater Accra Regional Hospital",
+    "image": "/hospitals/photos/ridge.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Amuzujoe",
+    "source": "https://commons.wikimedia.org/wiki/File:Ridge_Hospital_Accra.jpg"
+  },
+  {
+    "slug": "cape-coast",
+    "title": "Cape Coast Teaching Hospital",
+    "image": "/hospitals/photos/cape-coast.jpg",
+    "license": "unverified (news image)",
+    "artist": "",
+    "source": "https://www.modernghana.com/news/950703/cape-coast-teaching-hospital-gets-40000-medical.html"
+  },
+  {
+    "slug": "tamale",
+    "title": "Tamale Teaching Hospital",
+    "image": "/hospitals/photos/tamale.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Masssly",
+    "source": "https://commons.wikimedia.org/wiki/File:Tamale_Teaching_Hospital_4.jpg"
+  }
+]

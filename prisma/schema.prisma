@@ -1,0 +1,226 @@
+// NoBed.ai — Ghana real-time hospital bed availability & referral platform
+// SQLite for the MVP. In production this maps to PostgreSQL + PostGIS (lat/lng
+// would become a geography(Point) column; see DATABASE.md).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Users & access control
+// Roles: PUBLIC, HOSPITAL_STAFF, HOSPITAL_ADMIN, AMBULANCE_DISPATCHER,
+//        REGIONAL_ADMIN, NATIONAL_ADMIN, SUPER_ADMIN, AUDITOR
+// ---------------------------------------------------------------------------
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String?  @unique
+  // Demo passwords are stored hashed (sha256) — see lib/auth. Production: argon2/bcrypt + MFA.
+  passwordHash String
+  role         String   @default("PUBLIC")
+  hospitalId   String?
+  region       String?
+  isVerified   Boolean  @default(false)
+  verifiedAt   DateTime?
+  lastLogin    DateTime?
+  createdAt    DateTime @default(now())
+
+  hospital     Hospital?    @relation(fields: [hospitalId], references: [id])
+  bedUpdates   BedCapacity[]
+  auditLogs    AuditLog[]
+}
+
+// ---------------------------------------------------------------------------
+// Hospitals / facilities
+// ---------------------------------------------------------------------------
+model Hospital {
+  id               String   @id @default(cuid())
+  name             String
+  facilityType     String   // Teaching, Regional, Municipal, District, Polyclinic, Private, Mission
+  ownershipType    String   // Public, Private, Mission/CHAG
+  region           String
+  district         String
+  address          String
+  latitude         Float
+  longitude        Float
+  emergencyContact String
+  referralContact  String?
+  ambulanceAccept  Boolean  @default(true)
+  theatreAvailable Boolean  @default(true)
+  staffAvailable   Boolean  @default(true)
+  // Functional capacity — a bed only counts if the equipment to use it is free.
+  // (Per the Reach Alliance 2024 study: "no bed" is often an equipment constraint.)
+  oxygenAvailable      Int   @default(0)
+  ventilatorsAvailable Int   @default(0)
+  incubatorsAvailable  Int   @default(0)
+  referralNotes    String?
+  activeStatus     Boolean  @default(true)
+  lastUpdatedAt    DateTime @default(now())
+  // Data-trust: a verified user confirms the current capacity snapshot
+  verifiedAt       DateTime?
+  verifiedBy       String?
+  createdAt        DateTime @default(now())
+
+  beds             BedCapacity[]
+  users            User[]
+  referralsOut     Referral[]    @relation("ReferringFacility")
+  referralsIn      Referral[]    @relation("DestinationFacility")
+}
+
+// ---------------------------------------------------------------------------
+// Bed capacity — one row per (hospital, bedType)
+// bedType: emergency, icu, maternity, pediatric, isolation, general
+// ---------------------------------------------------------------------------
+model BedCapacity {
+  id            String   @id @default(cuid())
+  hospitalId    String
+  bedType       String
+  totalBeds     Int      @default(0)
+  occupiedBeds  Int      @default(0)
+  availableBeds Int      @default(0)
+  statusColour  String   @default("green") // red, amber, yellow, green
+  lastUpdatedBy String?
+  lastUpdatedAt DateTime @default(now())
+
+  hospital      Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  updatedBy     User?    @relation(fields: [lastUpdatedBy], references: [id])
+
+  @@unique([hospitalId, bedType])
+}
+
+// ---------------------------------------------------------------------------
+// Emergency referrals
+// status: Draft, Submitted, Accepted, Declined, Redirected, InTransit, Arrived, Closed, Escalated
+// ---------------------------------------------------------------------------
+model Referral {
+  id                  String   @id @default(cuid())
+  referralCode        String   @unique
+  patientReference    String   // anonymized — never store identifiable data in MVP
+  patientAgeRange     String
+  patientGender       String
+  emergencyType       String
+  urgencyLevel        String   // Critical, Urgent, Stable
+  requiredBedType     String
+  currentLocation     String?
+  referringFacilityId String?
+  destinationFacilityId String?
+  ambulanceStatus     String?  // Dispatched, EnRoute, Arrived, None
+  eta                 String?
+  currentStatus       String   @default("Draft")
+  notes               String?
+  // A bed is held at the destination when a referral is accepted (released if declined/redirected).
+  bedReserved         Boolean  @default(false)
+  reservedBedType     String?
+  createdBy           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  referringFacility   Hospital? @relation("ReferringFacility", fields: [referringFacilityId], references: [id])
+  destinationFacility Hospital? @relation("DestinationFacility", fields: [destinationFacilityId], references: [id])
+  events              ReferralEvent[]
+}
+
+model ReferralEvent {
+  id         String   @id @default(cuid())
+  referralId String
+  eventType  String
+  message    String
+  createdBy  String?
+  createdAt  DateTime @default(now())
+
+  referral   Referral @relation(fields: [referralId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// SMS command log (short code simulator writes here)
+// ---------------------------------------------------------------------------
+model SmsLog {
+  id          String   @id @default(cuid())
+  phoneNumber String
+  command     String
+  response    String
+  status      String   @default("OK") // OK, UNAUTHORIZED, ERROR
+  direction   String   @default("inbound")
+  userId      String?
+  createdAt   DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Audit trail
+// ---------------------------------------------------------------------------
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  actorLabel String?
+  action     String
+  entityType String
+  entityId   String?
+  oldValue   String?
+  newValue   String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+// ---------------------------------------------------------------------------
+// VERIFICATION
+// ---------------------------------------------------------------------------
+
+// Hospital staff account-access approval queue (reviewed by hospital/super admin)
+model VerificationRequest {
+  id           String    @id @default(cuid())
+  userId       String
+  userName     String
+  email        String
+  hospitalId   String?
+  hospitalName String?
+  kind         String    @default("HOSPITAL_STAFF")
+  status       String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  note         String?
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+// Public / stakeholder feedback on a hospital's reported status
+model CommunityReport {
+  id               String    @id @default(cuid())
+  hospitalId       String
+  hospitalName     String
+  reporterPhone    String?
+  reporterVerified Boolean   @default(false) // true when an OTP was confirmed
+  reportType       String    // ACCURATE, NO_BED_DESPITE_GREEN, OUTDATED, OTHER
+  message          String?
+  status           String    @default("PENDING") // PENDING, VERIFIED, DISMISSED
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  createdAt        DateTime  @default(now())
+}
+
+// Expo push tokens registered by the mobile app (for capacity/referral alerts)
+model PushToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  platform  String   @default("unknown")
+  createdAt DateTime @default(now())
+}
+
+// One-time passcodes (mock transport for the MVP; prod sends via SMS/email)
+model OtpChallenge {
+  id         String    @id @default(cuid())
+  channel    String    @default("phone")
+  target     String
+  codeHash   String
+  purpose    String    @default("report")
+  expiresAt  DateTime
+  consumedAt DateTime?
+  attempts   Int       @default(0)
+  createdAt  DateTime  @default(now())
+}
