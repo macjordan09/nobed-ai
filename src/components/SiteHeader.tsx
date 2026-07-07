@@ -4,6 +4,7 @@ import type { Session } from "@/lib/auth";
 
 const PUBLIC_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/capacity", label: "Capacity" },
   { href: "/find-beds", label: "Find Beds" },
   { href: "/map", label: "Map" },
   { href: "/sms", label: "SMS" },

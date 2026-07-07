@@ -77,7 +77,7 @@ export function HeroSlider() {
       <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-5 sm:px-8">
         <div className="max-w-3xl">
           <span className="fade-up inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] backdrop-blur">
-            <span className="live-dot text-brand-amber" /> Real-time emergency beds · Ghana
+            <span className="live-dot text-brand-amber" /> Real-time hospital operational capacity · Ghana
           </span>
 
           <h1 className="fade-up delay-1 mt-5 text-[19vw] font-black leading-[0.82] tracking-tighter text-brand-red sm:text-8xl xl:text-9xl" style={{ textShadow: "0 6px 40px rgba(0,0,0,.5)" }}>
@@ -89,16 +89,24 @@ export function HeroSlider() {
           </p>
 
           <p className="fade-up delay-3 mt-4 max-w-xl text-base leading-relaxed text-slate-200 sm:text-lg">
-            Every minute spent searching for an available hospital bed can cost a life. noBed.ai
-            provides real-time visibility into emergency bed availability across Ghana.
+            But &ldquo;no bed&rdquo; is rarely just about beds. Oxygen, ICU capacity, surgeons on
+            call, imaging, blood supply, nursing cover — all decide who a hospital can take.
+            noBed.ai shows real-time <span className="font-semibold text-white">operational
+            capacity</span> across Ghana, so patients reach a hospital that can actually treat them.
           </p>
 
           <div className="fade-up delay-4 mt-8 flex flex-wrap gap-3">
             <Link
-              href="/find-beds"
+              href="/capacity"
               className="rounded-xl bg-brand-red px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-brand-red/30 transition hover:bg-red-700"
             >
-              Find a Bed Now
+              See Live Capacity
+            </Link>
+            <Link
+              href="/find-beds"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/5 px-7 py-3.5 text-base font-bold backdrop-blur transition hover:bg-white/15"
+            >
+              Find a Bed
             </Link>
             <button
               onClick={() => setDemo(true)}
