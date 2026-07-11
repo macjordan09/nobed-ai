@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Ghana's real-time emergency hospital bed-availability platform.",
-  "author": "Mac-Jordan Degadjor <macjordan.degadjor@gmail.com>",
+  "author": "Mac-Jordan Degadjor <info.nobedai@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",

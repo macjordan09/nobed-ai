@@ -1,7 +1,7 @@
 // Fetch royalty-free hospital lead images from Wikimedia (Wikipedia) with license + attribution.
 import { mkdir, writeFile } from "fs/promises";
 
-const UA = "noBed.ai-image-fetch/1.0 (educational MVP; macjordan.degadjor@gmail.com)";
+const UA = "noBed.ai-image-fetch/1.0 (educational MVP; info.nobedai@gmail.com)";
 const API = "https://en.wikipedia.org/w/api.php";
 
 const HOSPITALS = [

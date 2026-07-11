@@ -122,9 +122,7 @@ role to log in instantly, or use the credentials below.
 
 **Business & communications** — [docs/business/](docs/business/README.md)
 - Executive/Top-level (summary, product overview, roadmap, business model, user guide, FAQ)
-- Marketing (messaging guide, value proposition, feature sheet, landing copy)
 - Startup ecosystem (pitch deck, investor one-pager, market analysis, GTM, competition)
-- Press (release, media kit, fact sheet, founder bio, media FAQ & quotes)
 
 ---
 
@@ -149,6 +147,6 @@ docs/                  # database, API, security, deployment, architecture
 
 ## Author
 
-**Created & developed by [Mac-Jordan Degadjor](mailto:macjordan.degadjor@gmail.com).**
+**Created & developed by [Mac-Jordan Degadjor](mailto:info.nobedai@gmail.com).**
 
 © 2026 Mac-Jordan Degadjor. All rights reserved. See [LICENSE](LICENSE).
