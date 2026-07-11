@@ -113,11 +113,18 @@ role to log in instantly, or use the credentials below.
 
 ## Documentation
 
+**Technical**
 - [docs/DATABASE.md](docs/DATABASE.md) — schema, ER overview, PostGIS migration
 - [docs/API.md](docs/API.md) — REST endpoint reference
 - [docs/SECURITY.md](docs/SECURITY.md) — security controls, privacy & compliance
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — production deployment guide
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — services, build phases, what's mocked
+
+**Business & communications** — [docs/business/](docs/business/README.md)
+- Executive/Top-level (summary, product overview, roadmap, business model, user guide, FAQ)
+- Marketing (messaging guide, value proposition, feature sheet, landing copy)
+- Startup ecosystem (pitch deck, investor one-pager, market analysis, GTM, competition)
+- Press (release, media kit, fact sheet, founder bio, media FAQ & quotes)
 
 ---
 
