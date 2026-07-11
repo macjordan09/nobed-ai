@@ -49,7 +49,7 @@ deployment adds managed auth with MFA for admins and OTP for SMS users. See
 
 ### Who's behind it?
 **Mac-Jordan Degadjor** — a Ghanaian digital and technology writer based in Canada — designed
-and built the platform. See the [Founder Bio](../press/FOUNDER-BIO.md).
+and built the platform. 
 
 ### Is there research behind this?
 Yes. A 2024 study by the **Reach Alliance** (University of Toronto's Munk School + Ashesi
@@ -59,7 +59,7 @@ referral system… to connect the various healthcare system referral levels."* F
 
 ### How would a hospital or region get involved?
 We're looking for a pilot region, institutional partners (GHS, MoH, NAS, CHAG), an SMS
-aggregator, and catalytic funding. Reach out: **macjordan.degadjor@gmail.com**.
+aggregator, and catalytic funding. Reach out: **info.nobedai@gmail.com**.
 
 ### What does it cost?
 The **public side is free, always.** Institutions pay a subscription for the efficiency they
@@ -73,4 +73,4 @@ and Neon. Built to run cheaply so it can run everywhere. Details in
 
 ---
 
-*Still have a question? Email macjordan.degadjor@gmail.com.*
+*Still have a question? Email info.nobedai@gmail.com.*

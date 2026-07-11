@@ -16,3 +16,5 @@ tsconfig.tsbuildinfo
 marketing/
 marketing-v2/
 scripts/gen-meta-brand-assets.mjs
+docs/business/marketing/
+docs/business/press/

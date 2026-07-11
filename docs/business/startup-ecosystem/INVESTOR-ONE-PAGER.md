@@ -1,7 +1,7 @@
 # noBed.ai — Investor One-Pager
 
 *Because in an emergency, "no bed" should be a fact, not a guess.*
-**Live demo:** https://nobed-ai.vercel.app · **Contact:** macjordan.degadjor@gmail.com
+**Live demo:** https://nobed-ai.vercel.app · **Contact:** info.nobedai@gmail.com
 
 ---
 

@@ -144,4 +144,4 @@ the pilot.)*
 3. **Catalytic funding** — to harden the MVP and staff the pilot.
 
 **We can't build every bed Ghana needs. We can make sure nobody dies looking for one.**
-macjordan.degadjor@gmail.com
+info.nobedai@gmail.com

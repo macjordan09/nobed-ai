@@ -89,5 +89,4 @@ We're looking for the three things that turn a working prototype into saved live
 The research ranks the effects of No Bed Syndrome. Top of the list: **loss of the patient.**
 Every other metric in this document is in service of moving that one down.
 
-*Sourced statistics: see the [stat library](../marketing/MESSAGING-GUIDE.md#sourced-stat-library).
-Full research analysis: [`research/NO-BED-SYNDROME-PAPER-ANALYSIS.md`](../../../research/NO-BED-SYNDROME-PAPER-ANALYSIS.md).*
+*Sourced statistics are cited in each document. Full research analysis: [`research/NO-BED-SYNDROME-PAPER-ANALYSIS.md`](../../../research/NO-BED-SYNDROME-PAPER-ANALYSIS.md).*
