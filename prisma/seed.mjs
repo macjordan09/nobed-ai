@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createHash } from "crypto";
+import { pathToFileURL } from "url";
 
-const prisma = new PrismaClient();
 const hash = (s) => createHash("sha256").update(s).digest("hex");
 
 // --- capacity colour logic (mirrors src/lib/status.ts) -------------------
@@ -153,7 +153,7 @@ const HOSPITALS = [
   },
 ];
 
-async function main() {
+export async function seed(prisma) {
   console.log("Resetting data…");
   await prisma.referralEvent.deleteMany();
   await prisma.referral.deleteMany();
@@ -360,9 +360,13 @@ async function main() {
   console.log("\n✅ Seed complete.");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
+// Run directly (`node prisma/seed.mjs`) against a normal TCP Postgres connection.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const prisma = new PrismaClient();
+  seed(prisma)
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(() => prisma.$disconnect());
+}

@@ -1,0 +1,6 @@
+# Keep deploys lean: exclude non-app assets from the upload
+marketing
+marketing-v2
+research
+docs
+*.log
