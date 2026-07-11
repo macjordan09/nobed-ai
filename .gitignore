@@ -11,3 +11,8 @@ next-env.d.ts
 .vercel
 .env*
 tsconfig.tsbuildinfo
+
+# Marketing & social assets are maintained locally, not in the public repo
+marketing/
+marketing-v2/
+scripts/gen-meta-brand-assets.mjs
