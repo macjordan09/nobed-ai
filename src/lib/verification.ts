@@ -1,8 +1,8 @@
 // Data-trust state for a hospital's reported capacity.
 //
-//   verified      — a verified user confirmed the CURRENT numbers, recently
-//   self_reported — entered/changed but not (re)confirmed since
-//   stale         — not updated within the freshness window (don't trust)
+//   verified:      a verified user confirmed the CURRENT numbers, recently
+//   self_reported: entered/changed but not (re)confirmed since
+//   stale:         not updated within the freshness window (don't trust)
 
 export type VerificationState = "verified" | "self_reported" | "stale";
 

@@ -55,7 +55,7 @@ export async function getAnalytics() {
   });
   regions.sort((a, b) => b.pressure - a.pressure);
 
-  // Stale updates (not updated in 2h) — update compliance
+  // Stale updates (not updated in 2h): update compliance
   const STALE_MS = 2 * 60 * 60 * 1000;
   const stale = hospitals.filter((h) => now - new Date(h.lastUpdatedAt).getTime() > STALE_MS);
   const compliance = Math.round(((hospitals.length - stale.length) / Math.max(1, hospitals.length)) * 100);

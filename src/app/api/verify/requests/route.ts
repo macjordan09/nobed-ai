@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 
-// Staff account-access requests — visible to anyone who can view analytics.
+// Staff account-access requests, visible to anyone who can view analytics.
 export async function GET() {
   const session = getSession();
   if (!session || !can(session.role, "view_analytics")) {

@@ -20,7 +20,7 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
   const h = getHospital(params.id);
   if (!h) return { title: "Hospital not found · noBed.ai" };
   return {
-    title: `${h.shortName} — Operational Capacity · noBed.ai`,
+    title: `${h.shortName} · Operational Capacity · noBed.ai`,
     description: h.summary,
   };
 }

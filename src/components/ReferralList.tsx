@@ -107,8 +107,8 @@ function ReferralCard({ r, canManage }: { r: ReferralDTO; canManage: boolean }) 
             <strong>{r.requiredBedType}</strong> bed
           </div>
           <div className="mt-1 text-xs text-slate-500">
-            {r.referringFacility?.name ?? r.currentLocation ?? "—"} →{" "}
-            {r.destinationFacility?.name ?? "—"}
+            {r.referringFacility?.name ?? r.currentLocation ?? "Unknown"} →{" "}
+            {r.destinationFacility?.name ?? "Unknown"}
             {r.eta ? ` · ETA ${r.eta}` : ""}
             {r.ambulanceStatus && r.ambulanceStatus !== "None" ? ` · 🚑 ${r.ambulanceStatus}` : ""}
           </div>
@@ -122,7 +122,7 @@ function ReferralCard({ r, canManage }: { r: ReferralDTO; canManage: boolean }) 
         <ol className="mt-3 space-y-1 border-l-2 border-slate-200 pl-3 text-xs text-slate-600">
           {r.events.map((e) => (
             <li key={e.id}>
-              <span className="font-medium">{e.eventType}</span> — {e.message}{" "}
+              <span className="font-medium">{e.eventType}</span>: {e.message}{" "}
               <span className="text-slate-400">
                 ({new Date(e.createdAt).toLocaleString("en-GB")})
               </span>

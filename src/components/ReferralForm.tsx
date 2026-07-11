@@ -117,7 +117,7 @@ export function ReferralForm({ hospitals }: { hospitals: HospitalView[] }) {
       {suggestions.length > 0 && (
         <div className="rounded-lg bg-green-50 p-3 text-xs text-green-800">
           <span className="font-semibold">AI suggestion:</span> facilities with {form.requiredBedType}{" "}
-          beds —{" "}
+          beds:{" "}
           {suggestions.map((s, i) => (
             <button
               type="button"
@@ -144,7 +144,7 @@ export function ReferralForm({ hospitals }: { hospitals: HospitalView[] }) {
             <option value="">Select…</option>
             {hospitals.map((h) => (
               <option key={h.id} value={h.id}>
-                {h.name} — {h.status.toUpperCase()}
+                {h.name} · {h.status.toUpperCase()}
               </option>
             ))}
           </select>

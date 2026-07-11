@@ -1,4 +1,4 @@
-// Faint medical motif backdrop — a grid of medical crosses plus a heartbeat
+// Faint medical motif backdrop, a grid of medical crosses plus a heartbeat
 // (ECG) line. Inherits colour from the parent via `currentColor`; set colour and
 // opacity through the `className` (e.g. "text-white opacity-[0.08]").
 // Pass a unique `id` when used more than once on a page (SVG pattern ids must be unique).

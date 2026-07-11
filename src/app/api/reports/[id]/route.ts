@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 
-// Moderate a community report — admins / auditors.
+// Moderate a community report (admins / auditors).
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = getSession();
   if (!session || !can(session.role, "view_analytics")) {

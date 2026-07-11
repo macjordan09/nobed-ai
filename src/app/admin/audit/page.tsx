@@ -50,9 +50,9 @@ export default async function AdminAudit() {
                 <td className="px-4 py-2 text-slate-600">{l.entityType}</td>
                 <td className="px-4 py-2 text-xs text-slate-600">
                   {l.oldValue ? `${l.oldValue} → ` : ""}
-                  {l.newValue ?? "—"}
+                  {l.newValue ?? "n/a"}
                 </td>
-                <td className="px-4 py-2 font-mono text-xs text-slate-400">{l.ipAddress ?? "—"}</td>
+                <td className="px-4 py-2 font-mono text-xs text-slate-400">{l.ipAddress ?? "n/a"}</td>
               </tr>
             ))}
           </tbody>

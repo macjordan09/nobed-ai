@@ -35,7 +35,7 @@ export function CapacityDashboard({ hospitals }: { hospitals: OperationalHospita
 
   return (
     <div>
-      {/* Summary strip — capacity at a glance */}
+      {/* Summary strip: capacity at a glance */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
         <button
           onClick={() => setStatus("all")}

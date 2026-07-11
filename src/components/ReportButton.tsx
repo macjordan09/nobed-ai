@@ -97,7 +97,7 @@ export function ReportButton({ hospitalId, hospitalName }: { hospitalId: string;
 
                 <label className="mt-3 flex items-center gap-2 text-sm text-slate-700">
                   <input type="checkbox" checked={useOtp} onChange={(e) => setUseOtp(e.target.checked)} />
-                  Verify my phone number (recommended — makes your report trusted)
+                  Verify my phone number (recommended, makes your report trusted)
                 </label>
 
                 {useOtp && (

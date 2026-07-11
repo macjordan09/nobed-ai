@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   // Unverified staff accounts may view but not submit capacity data.
   if (!session.isVerified) {
     return NextResponse.json(
-      { error: "Account pending verification — you cannot update capacity yet." },
+      { error: "Account pending verification. You cannot update capacity yet." },
       { status: 403 },
     );
   }

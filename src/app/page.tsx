@@ -1,320 +1,237 @@
 import Link from "next/link";
-import { getHospitalViews, type HospitalView } from "@/lib/hospitals";
-import { HeroSlider } from "@/components/HeroSlider";
-import { CrisisSection } from "@/components/CrisisSection";
-import { ProductShowcase } from "@/components/ProductShowcase";
-import { CountUp } from "@/components/CountUp";
-import { MedicalBackdrop } from "@/components/MedicalBackdrop";
-import { StatusBadge } from "@/components/StatusBadge";
-import { VerificationBadge } from "@/components/VerificationBadge";
+import type { Metadata } from "next";
+import { HOSPITALS } from "@/lib/operational";
+import { LiveMap } from "@/components/landing/LiveMap";
+import { HeroLive } from "@/components/landing/HeroLive";
+import { HospitalCapacityCard } from "@/components/landing/HospitalCapacityCard";
+import { EmergencyTimeline } from "@/components/landing/EmergencyTimeline";
+import { SMSMockup } from "@/components/landing/SMSMockup";
+import { AudienceCard, type Audience } from "@/components/landing/AudienceCard";
+import { TrustSafetyCard, type TrustItem } from "@/components/landing/TrustSafetyCard";
+import { CTASection } from "@/components/landing/CTASection";
+import { StickyEmergencyBar } from "@/components/landing/StickyEmergencyBar";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "NoBed.ai · Real-time hospital operational capacity for Ghana",
+  description:
+    "No one should die looking for a hospital bed. NoBed.ai shows which facilities across Ghana can actually receive emergency patients right now: beds, ICU, oxygen, staff, imaging and theatre. Web and SMS.",
+};
 
-// Real, CC-licensed hospital photos from Wikimedia Commons (see credits below).
-// Cape Coast keeps the illustrated banner — no free photo is available.
-const FEATURED = [
-  { img: "/hospitals/photos/korle-bu.jpg", match: ["Korle Bu"] },
-  { img: "/hospitals/photos/kath.jpg", match: ["Komfo Anokye"] },
-  { img: "/hospitals/photos/ugmc.jpg", match: ["University of Ghana"] },
-  { img: "/hospitals/photos/ridge.jpg", match: ["Ridge", "Greater Accra Regional"] },
-  { img: "/hospitals/photos/cape-coast.jpg", match: ["Cape Coast"] },
-  { img: "/hospitals/photos/tamale.jpg", match: ["Tamale"] },
+const HOW = [
+  { n: 1, title: "Hospitals update capacity", text: "Charge nurses and admins report beds, ICU, oxygen, staffing, imaging and theatre, from a dashboard or by SMS." },
+  { n: 2, title: "The system verifies & calculates", text: "Functional capacity is computed, freshness is tracked, and each facility gets an honest status, never a false green." },
+  { n: 3, title: "Families & ambulance teams search", text: "Search by location and the care actually needed, whether trauma, ICU or obstetrics, not just an empty mattress." },
+  { n: 4, title: "Referrals are confirmed & tracked", text: "The receiving hospital confirms and holds a bed; the transfer is routed and tracked until the patient arrives." },
 ];
 
-const PHOTO_CREDITS = [
-  { label: "Korle Bu — Fquasie, CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Korle-Bu_hospital.jpg" },
-  { label: "Komfo Anokye — OER Africa, CC BY 2.0", href: "https://commons.wikimedia.org/wiki/File:Komfo_Anokye_Teaching_Hospital,_Kumasi,_Ghana.jpg" },
-  { label: "UGMC — Jwale2, CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:University_of_Ghana_Medical_Centre_07.jpg" },
-  { label: "Greater Accra Regional — Amuzujoe, CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Ridge_Hospital_Accra.jpg" },
-  { label: "Tamale — Masssly, CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Tamale_Teaching_Hospital_4.jpg" },
-  { label: "Cape Coast — via Modern Ghana", href: "https://www.modernghana.com/news/950703/cape-coast-teaching-hospital-gets-40000-medical.html" },
+const AUDIENCES: Audience[] = [
+  { icon: "family", title: "Families", benefit: "Know which hospital can actually take your patient before you leave the house, on any phone." },
+  { icon: "ambulance", title: "Ambulance teams", benefit: "Route to a facility with real, functional capacity the first time, with no dead-end transfers." },
+  { icon: "hospital", title: "Hospitals", benefit: "Broadcast true capacity, stop receiving referrals you can't take, and decongest the emergency ward." },
+  { icon: "ministry", title: "Ministry of Health / GHS", benefit: "See national pressure live, and find where ICU and functional capacity is missing." },
+  { icon: "region", title: "Regional health directors", benefit: "Track facilities in your region, spot stale reporting, and coordinate referrals across districts." },
 ];
 
-export default async function HomePage() {
-  const hospitals = await getHospitalViews();
-  const regions = new Set(hospitals.map((h) => h.region)).size;
-  const emergencyBeds = hospitals.reduce((s, h) => s + h.emergencyAvailable, 0);
+const TRUST: TrustItem[] = [
+  { title: "Demo data, clearly labelled", detail: "Capacity figures here are seeded demonstration data, never presented as live hospital status." },
+  { title: "No full medical records", detail: "The platform stores operational capacity, not patient medical records." },
+  { title: "Anonymised referrals", detail: "Referrals use anonymised patient references only, with no identifiable patient data." },
+  { title: "Role-based access", detail: "Eight roles, ten permissions. Capacity edits are gated to verified facility staff." },
+  { title: "Audit logs", detail: "Every capacity change, referral and login is recorded with actor and timestamp." },
+  { title: "Ghana Data Protection Act", detail: "Designed to align with the Ghana Data Protection Act, 2012." },
+  { title: "Verified & freshness states", detail: "Verified, self-reported and stale states make the trustworthiness of every number visible." },
+  { title: "Always call 112 first", detail: "In a life-threatening emergency, call 112. NoBed.ai guides where to go. It is not dispatch." },
+];
 
-  const featured = FEATURED.map((f) => ({
-    img: f.img,
-    h: hospitals.find((h) => f.match.some((m) => h.name.includes(m))),
-  })).filter((f): f is { img: string; h: HospitalView } => Boolean(f.h));
+// Real screenshots of the live demo, not illustrations.
+const MODULES = [
+  { title: "Live Capacity Dashboard", text: "Operational status for every facility: beds, ICU, oxygen, staff, imaging, theatre.", href: "/capacity", img: "/showcase/capacity.png" },
+  { title: "Ghana Hospital Map", text: "Colour-coded pins by real, functional capacity across all regions.", href: "/map", img: "/showcase/map.png" },
+  { title: "SMS Short Code Access", text: "Text a short code for the nearest facilities. Works with no internet.", href: "/sms", img: "/showcase/sms.png" },
+  { title: "Referral Guidance & Tracking", text: "Resource breakdown, service-specific acceptance, and referral guidance per facility.", href: "/capacity/korle-bu", img: "/showcase/capacity-detail.png" },
+];
 
+export default function HomePage() {
   return (
-    <div className="-mb-6">
-      {/* ───────────────── 1 · HERO ───────────────── */}
-      <HeroSlider />
+    <div className="-mb-6 pb-16 md:pb-0">
+      {/* ───────────── 1 · HERO (human first, live map second) ───────────── */}
+      <HeroLive />
 
-      {/* ───────────────── 2 · THE CRISIS ───────────────── */}
-      <CrisisSection />
+      {/* ───────────── 2 · CRISIS ───────────── */}
+      <Section>
+        <SectionHead
+          eyebrow="The crisis"
+          eyebrowTone="red"
+          title="The beds may exist. The visibility does not."
+          sub="No Bed Syndrome is rarely a pure shortage. It is a coordination failure. No one can see, in the moment, which hospital can actually take the patient."
+        />
+        <div className="mt-8">
+          <EmergencyTimeline />
+        </div>
+      </Section>
 
-      {/* ───────────────── 3 · WHAT IS NO BED SYNDROME ───────────────── */}
-      <Band>
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <Eyebrow tone="amber">What is No Bed Syndrome?</Eyebrow>
-            <H2>The beds exist. The visibility doesn&apos;t.</H2>
-            <div className="mt-4 space-y-4 text-lg leading-relaxed text-slate-600">
-              <p>
-                No Bed Syndrome is what happens when a critically ill patient is turned away from
-                hospital after hospital because no one knows, in the moment, which facility actually
-                has space.
-              </p>
-              <p>
-                Capacity changes by the minute. It lives in people&apos;s heads and paper logbooks —
-                never in a shared, real-time picture for the ambulance crew, the referring nurse, or
-                the family in the back seat.
-              </p>
-            </div>
-          </div>
-
-          {/* scenario card */}
-          <div className="relative overflow-hidden rounded-3xl bg-brand-ink p-7 text-white shadow-xl">
-            <MedicalBackdrop id="scenario" className="text-white opacity-[0.08]" />
-            <div className="relative">
-              <div className="text-sm font-semibold uppercase tracking-widest text-slate-400">
-                A night that repeats
+      {/* ───────────── 3 · HOW IT WORKS ───────────── */}
+      <Section id="how-it-works" tint>
+        <SectionHead eyebrow="How it works" title="From capacity report to confirmed bed." />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {HOW.map((s) => (
+            <div key={s.n} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-green/10 text-sm font-black text-brand-green">
+                {s.n}
               </div>
-              <ol className="mt-5 space-y-4">
-                {[
-                  ["11:30 PM", "Emergency at home. The family calls around — every line is busy."],
-                  ["12:00 AM", "First hospital: “No bed.” Back in the car."],
-                  ["1:00 AM", "Third hospital turns them away. The clock keeps running."],
-                  ["—", "A bed was free 15 minutes away. Nobody knew."],
-                ].map(([time, text]) => (
-                  <li key={time} className="flex gap-4">
-                    <span className="w-16 shrink-0 text-sm font-bold text-brand-amber">{time}</span>
-                    <span className="text-sm text-slate-200">{text}</span>
-                  </li>
-                ))}
-              </ol>
+              <h3 className="mt-3 text-sm font-bold text-brand-ink">{s.title}</h3>
+              <p className="mt-1.5 text-sm leading-snug text-slate-600">{s.text}</p>
             </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ───────────── 4 · PRODUCT (real screenshots) ───────────── */}
+      <Section>
+        <SectionHead
+          eyebrow="See it working"
+          title="This is the actual product."
+          sub="Real screens from the live demo: the operational dashboard, the Ghana map, SMS access, and per-facility referral guidance."
+        />
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {MODULES.map((m) => (
+            <Link key={m.title} href={m.href} className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+              <div className="aspect-[16/10] overflow-hidden border-b border-slate-100 bg-slate-100">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={m.img}
+                  alt={`${m.title}: screenshot of the live NoBed.ai demo`}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]"
+                />
+              </div>
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-brand-ink">{m.title}</h3>
+                  <span className="text-brand-green transition group-hover:translate-x-0.5">→</span>
+                </div>
+                <p className="mt-1 text-sm leading-snug text-slate-600">{m.text}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      {/* ───────────── 5 · WHO IT SERVES ───────────── */}
+      <Section id="for-hospitals" tint>
+        <SectionHead eyebrow="Who it serves" title="One live picture, five frontlines." />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {AUDIENCES.map((a) => (
+            <AudienceCard key={a.title} a={a} />
+          ))}
+        </div>
+      </Section>
+
+      {/* ───────────── 6 · SMS ACCESS ───────────── */}
+      <Section id="sms">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <SectionHead eyebrow="No internet needed" title="Works even without a smartphone." align="left" />
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600">
+              The people closest to an emergency often have the least connectivity. Text a short
+              code and get the nearest facilities that can actually receive the patient, on any
+              phone, on any network.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm text-slate-700">
+              {["Nearest facilities ranked by real capacity", "Bed type and service-specific guidance", "Updates accepted only from registered facility numbers"].map((t) => (
+                <li key={t} className="flex items-start gap-2">
+                  <span className="mt-0.5 text-brand-green">✓</span>{t}
+                </li>
+              ))}
+            </ul>
+            <Link href="/sms" className="mt-6 inline-flex rounded-xl bg-brand-ink px-5 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800">
+              Try the SMS simulator
+            </Link>
           </div>
-        </div>
-      </Band>
-
-      {/* ───────────────── 4 · HOW NOBED.AI WORKS ───────────────── */}
-      <Section>
-        <div className="text-center">
-          <Eyebrow tone="green">How noBed.ai works</Eyebrow>
-          <H2 center>Make the invisible visible — in real time.</H2>
-          <Lead center>
-            The same live picture for everyone in the chain. Explore the platform:
-          </Lead>
-        </div>
-        <div className="mt-10">
-          <ProductShowcase hospitals={hospitals} />
+          <SMSMockup />
         </div>
       </Section>
 
-      {/* ───────────────── 4b · FEATURED HOSPITALS (image cards) ───────────────── */}
-      <Band>
-        <div className="text-center">
-          <Eyebrow tone="green">On the platform</Eyebrow>
-          <H2 center>Hospitals already on noBed.ai.</H2>
-          <Lead center>
-            Live capacity from major facilities across Ghana — updated and verified in real time.
-          </Lead>
-        </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((f) => (
-            <FeaturedCard key={f.h.id} img={f.img} h={f.h} />
+      {/* ───────────── 7 · TRUST & SAFETY ───────────── */}
+      <Section tint>
+        <SectionHead eyebrow="Trust & safety" title="Built to be trusted with the worst nights." sub="A capacity map is only useful if people can believe it. So we are explicit about data, privacy and limits." />
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {TRUST.map((t) => (
+            <TrustSafetyCard key={t.title} item={t} />
           ))}
-        </div>
-        <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-relaxed text-slate-400">
-          Hospital photos —{" "}
-          {PHOTO_CREDITS.map((c, i) => (
-            <span key={c.href}>
-              <a href={c.href} target="_blank" rel="noreferrer" className="underline hover:text-slate-600">
-                {c.label}
-              </a>
-              {i < PHOTO_CREDITS.length - 1 ? "; " : "."}
-            </span>
-          ))}
-        </p>
-      </Band>
-
-      {/* ───────────────── 5 · WHO BENEFITS ───────────────── */}
-      <Section>
-        <div className="text-center">
-          <Eyebrow tone="green">Who benefits</Eyebrow>
-          <H2 center>Built for everyone in the emergency.</H2>
-        </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <Benefit icon={<IconFamily />} title="Families" body="Find the nearest hospital with a free emergency bed — on the web or by SMS." />
-          <Benefit icon={<IconAmbulance />} title="Ambulance teams" body="See live capacity and refer to a hospital that can actually receive the patient." />
-          <Benefit icon={<IconHospital />} title="Hospitals" body="Update and verify capacity in seconds. Receive referrals you can act on." />
-          <Benefit icon={<IconGov />} title="Ministry of Health" body="Monitor regional pressure, ICU coverage and referral delays nationwide." />
         </div>
       </Section>
 
-      {/* ───────────────── 6 · TRUST & PARTNERSHIPS ───────────────── */}
-      <section className="full-bleed border-y border-slate-200 bg-white py-12">
-        <p className="mb-8 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
-          Built for Ghana&apos;s health system
-        </p>
-        <div className="relative overflow-hidden">
-          <div className="marquee-track gap-4">
-            {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <span
-                key={i}
-                className="whitespace-nowrap rounded-xl border border-slate-200 bg-brand-mist px-6 py-3 text-sm font-bold text-slate-500"
-              >
-                {p}
-              </span>
+      {/* ───────────── 8 · PILOT NETWORK ───────────── */}
+      <Section id="partners">
+        <SectionHead eyebrow="Pilot network" title="Sample facilities across Ghana." sub="Demonstration examples, not official live partners unless verified." />
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="rounded-2xl border border-slate-200 bg-slate-900 p-3">
+            <div className="h-[320px] overflow-hidden rounded-lg">
+              <LiveMap theme="dark" interactive className="h-full w-full" />
+            </div>
+            <p className="mt-1.5 text-[10px] text-slate-500">
+              © OpenStreetMap contributors · © CARTO · drag & zoom · pins are demo data
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {HOSPITALS.map((h) => (
+              <HospitalCapacityCard key={h.id} h={h} href={`/capacity/${h.id}`} />
             ))}
           </div>
         </div>
-        <p className="mt-8 text-center text-xs text-slate-400">
-          Stakeholders shown represent the intended pilot network. noBed.ai is an independent MVP.
+        <p className="mt-4 text-xs text-slate-400">
+          Korle Bu · Komfo Anokye · Greater Accra Regional (Ridge) · Tamale · Cape Coast,
+          shown with seeded demo data to illustrate the platform.
         </p>
-      </section>
+      </Section>
 
-      {/* ───────────────── 7 · IMPACT METRICS ───────────────── */}
-      <section className="full-bleed relative overflow-hidden bg-brand-green py-20 text-white">
-        <MedicalBackdrop id="impact" className="text-white opacity-[0.08]" />
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="text-center">
-            <div className="text-sm font-semibold uppercase tracking-[0.2em] text-green-200">The impact</div>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-              From hours of guessing to one live map.
-            </h2>
-          </div>
-          <div className="mt-12 grid grid-cols-2 gap-8 lg:grid-cols-4">
-            <Metric value={<CountUp value={hospitals.length} />} label="Hospitals live" />
-            <Metric value={<CountUp value={regions} />} label="Regions covered" />
-            <Metric value={<CountUp value={emergencyBeds} />} label="Emergency beds visible now" />
-            <Metric value="24/7" label="Real-time · works on any phone via SMS" />
-          </div>
-          <p className="mt-10 text-center text-sm text-green-100/80">
-            Live coverage from the platform — outcome metrics (referral time saved, transfers
-            avoided) are captured as hospitals come online.
-          </p>
-        </div>
-      </section>
+      {/* ───────────── 9 · FINAL CTA ───────────── */}
+      <CTASection />
 
-      {/* ───────────────── 8 · FINAL CTA ───────────────── */}
-      <section className="full-bleed relative overflow-hidden bg-brand-ink py-24 text-center text-white">
-        <MedicalBackdrop id="final" className="text-brand-red opacity-[0.14]" />
-        <div className="relative mx-auto max-w-3xl px-5">
-          <h2 className="text-4xl font-black tracking-tight sm:text-6xl">Every minute matters.</h2>
-          <p className="mt-4 text-xl font-semibold text-slate-200 sm:text-2xl">
-            Help Ghana end No Bed Syndrome.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link href="/find-beds" className="rounded-xl bg-brand-red px-8 py-4 text-lg font-bold shadow-lg shadow-brand-red/30 transition hover:bg-red-700">
-              Find a Bed Now
-            </Link>
-            <Link href="/about" className="rounded-xl border border-white/40 px-8 py-4 text-lg font-bold transition hover:bg-white/10">
-              Join the mission
-            </Link>
-          </div>
-          <p className="mt-8 text-sm text-slate-400">
-            In a real emergency, call <span className="font-bold text-brand-red">112</span>.
-          </p>
-        </div>
-      </section>
+      {/* Mobile sticky emergency bar */}
+      <StickyEmergencyBar />
     </div>
   );
 }
 
-const PARTNERS = [
-  "Ministry of Health",
-  "Ghana Health Service",
-  "National Ambulance Service",
-  "Korle Bu Teaching Hospital",
-  "Komfo Anokye Teaching Hospital",
-  "University of Ghana Medical Centre",
-  "Regional Health Directorates",
-];
-
-/* ───────────────── layout helpers ───────────────── */
-
-function Section({ children }: { children: React.ReactNode }) {
-  return <section className="py-20 sm:py-24">{children}</section>;
-}
-
-function Band({ children }: { children: React.ReactNode }) {
+/* ── Local section helpers ─────────────────────────────────────────────── */
+function Section({ children, id, tint }: { children: React.ReactNode; id?: string; tint?: boolean }) {
+  if (tint) {
+    return (
+      <section id={id} className="full-bleed bg-slate-50">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">{children}</div>
+      </section>
+    );
+  }
   return (
-    <section className="full-bleed bg-white py-20 sm:py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">{children}</div>
+    <section id={id} className="mx-auto max-w-7xl py-14 sm:py-16">
+      {children}
     </section>
   );
 }
 
-function Eyebrow({ children, tone }: { children: React.ReactNode; tone: "green" | "red" | "amber" }) {
-  const c = { green: "text-brand-green", red: "text-brand-red", amber: "text-brand-amber" }[tone];
-  return <div className={`text-sm font-bold uppercase tracking-[0.2em] ${c}`}>{children}</div>;
-}
-
-function H2({ children, center }: { children: React.ReactNode; center?: boolean }) {
+function SectionHead({
+  eyebrow,
+  title,
+  sub,
+  align = "center",
+  eyebrowTone = "green",
+}: {
+  eyebrow: string;
+  title: string;
+  sub?: string;
+  align?: "center" | "left";
+  eyebrowTone?: "green" | "red";
+}) {
+  const center = align === "center";
   return (
-    <h2 className={`mt-3 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl ${center ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}`}>
-      {children}
-    </h2>
-  );
-}
-
-function Lead({ children, center }: { children: React.ReactNode; center?: boolean }) {
-  return (
-    <p className={`mt-4 text-lg leading-relaxed text-slate-600 ${center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}`}>
-      {children}
-    </p>
-  );
-}
-
-function Metric({ value, label }: { value: React.ReactNode; label: string }) {
-  return (
-    <div className="text-center">
-      <div className="text-5xl font-black tracking-tight">{value}</div>
-      <div className="mt-2 text-sm text-green-100">{label}</div>
+    <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
+      <span className={`text-xs font-bold uppercase tracking-[0.16em] ${eyebrowTone === "red" ? "text-brand-red" : "text-brand-green"}`}>
+        {eyebrow}
+      </span>
+      <h2 className="mt-2 text-2xl font-black tracking-tight text-brand-ink sm:text-3xl">{title}</h2>
+      {sub && <p className="mt-3 text-base leading-relaxed text-slate-600">{sub}</p>}
     </div>
   );
 }
-
-function FeaturedCard({ img, h }: { img: string; h: HospitalView }) {
-  return (
-    <Link href="/map" className="lift group block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="relative h-44">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={img} alt={h.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-        <div className="absolute right-3 top-3">
-          <StatusBadge status={h.status} showLabel={false} />
-        </div>
-        <div className="absolute bottom-3 left-4 right-4 text-white">
-          <div className="text-base font-bold leading-tight">{h.name}</div>
-          <div className="text-xs text-white/80">
-            {h.district}, {h.region}
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center justify-between px-4 py-3 text-sm">
-        <span className="text-slate-600">
-          Emergency <b className="text-slate-900">{h.emergencyAvailable}</b> · ICU{" "}
-          <b className="text-slate-900">{h.icuAvailable}</b>
-        </span>
-        <VerificationBadge state={h.verification} />
-      </div>
-    </Link>
-  );
-}
-
-function Benefit({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
-  return (
-    <div className="lift rounded-2xl border border-slate-200 bg-white p-6">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-brand-green">
-        {icon}
-      </div>
-      <h3 className="mt-4 text-lg font-bold text-slate-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
-    </div>
-  );
-}
-
-/* ───────────────── icons ───────────────── */
-const ip = { width: 24, height: 24, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-function IconFamily() { return (<svg {...ip}><circle cx="9" cy="8" r="3" /><path d="M3 20a6 6 0 0 1 12 0" /><path d="M16 6a3 3 0 0 1 0 6" /><path d="M21 20a5 5 0 0 0-4-5" /></svg>); }
-function IconAmbulance() { return (<svg {...ip}><path d="M3 7h11v8H3z" /><path d="M14 10h4l3 3v2h-7z" /><circle cx="7" cy="17" r="2" /><circle cx="17" cy="17" r="2" /><path d="M7.5 9v3M6 10.5h3" /></svg>); }
-function IconHospital() { return (<svg {...ip}><path d="M4 21V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v16" /><path d="M2 21h20M12 7v6M9 10h6" /></svg>); }
-function IconGov() { return (<svg {...ip}><path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6M9 21v-6h6v6" /></svg>); }

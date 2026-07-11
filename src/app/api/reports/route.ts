@@ -5,7 +5,7 @@ import { can } from "@/lib/rbac";
 import { verifyOtp } from "@/lib/otp";
 import { REPORT_TYPES } from "@/lib/verification";
 
-// List reports — admins / auditors only.
+// List reports (admins / auditors only).
 export async function GET() {
   const session = getSession();
   if (!session || !can(session.role, "view_analytics")) {
@@ -15,7 +15,7 @@ export async function GET() {
   return NextResponse.json({ count: reports.length, reports });
 }
 
-// Submit a report — public. Optional OTP phone verification raises trust.
+// Submit a report (public). Optional OTP phone verification raises trust.
 export async function POST(req: Request) {
   const b = await req.json().catch(() => ({}));
   if (!b.hospitalId || !b.reportType || !REPORT_TYPES[b.reportType]) {

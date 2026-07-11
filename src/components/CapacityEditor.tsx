@@ -138,7 +138,7 @@ export function CapacityEditor({ hospital }: { hospital: HospitalView }) {
             Functional equipment available
           </div>
           <p className="mt-0.5 text-xs text-slate-400">
-            A bed only counts if it&apos;s equipped. These cap usable beds — ventilators for ICU,
+            A bed only counts if it&apos;s equipped. These cap usable beds: ventilators for ICU,
             oxygen for emergency, incubators for maternity/paediatric.
           </p>
           <div className="mt-2 flex flex-wrap gap-4">

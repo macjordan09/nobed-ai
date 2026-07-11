@@ -1,7 +1,7 @@
 import { STATUS_META, type CapacityStatus } from "@/lib/operational";
 
 /**
- * Operational capacity status pill — colour + glyph + label (never colour alone).
+ * Operational capacity status pill: colour + glyph + label (never colour alone).
  * Used on cards, the dashboard and the hospital detail view.
  */
 export function OperationalStatusBadge({

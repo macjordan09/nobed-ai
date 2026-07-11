@@ -68,7 +68,7 @@ export async function processSms(rawPhone: string, rawCommand: string): Promise<
     });
     return {
       status: "OK",
-      response: `Nearest facilities with ${label} availability — ${lines.join("; ")}. Call 112 for ambulance.`,
+      response: `Nearest facilities with ${label} availability: ${lines.join("; ")}. Call 112 for ambulance.`,
     };
   }
 

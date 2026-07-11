@@ -40,8 +40,8 @@ export default async function AdminUsers() {
                     {ROLE_LABELS[u.role as Role] ?? u.role}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-slate-600">{u.hospital?.name ?? u.region ?? "—"}</td>
-                <td className="px-4 py-2">{u.isVerified ? "✓" : "—"}</td>
+                <td className="px-4 py-2 text-slate-600">{u.hospital?.name ?? u.region ?? "n/a"}</td>
+                <td className="px-4 py-2">{u.isVerified ? "✓" : "n/a"}</td>
                 <td className="px-4 py-2 text-xs text-slate-400">
                   {u.lastLogin ? new Date(u.lastLogin).toLocaleString("en-GB") : "never"}
                 </td>

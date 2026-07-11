@@ -90,7 +90,7 @@ export function HeroSlider() {
 
           <p className="fade-up delay-3 mt-4 max-w-xl text-base leading-relaxed text-slate-200 sm:text-lg">
             But &ldquo;no bed&rdquo; is rarely just about beds. Oxygen, ICU capacity, surgeons on
-            call, imaging, blood supply, nursing cover — all decide who a hospital can take.
+            call, imaging, blood supply, nursing cover. All decide who a hospital can take.
             noBed.ai shows real-time <span className="font-semibold text-white">operational
             capacity</span> across Ghana, so patients reach a hospital that can actually treat them.
           </p>

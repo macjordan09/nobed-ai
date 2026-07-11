@@ -4,7 +4,7 @@ import type { Role } from "./rbac";
 
 // ---------------------------------------------------------------------------
 // MOCK AUTH for the MVP demo.
-// Sessions are signed (HMAC-SHA256) cookies — enough to demonstrate RBAC and
+// Sessions are signed (HMAC-SHA256) cookies, enough to demonstrate RBAC and
 // audit trails. Production swaps this for Supabase Auth / Clerk with MFA + OTP
 // (see SECURITY.md). Do not ship this implementation to production.
 // ---------------------------------------------------------------------------

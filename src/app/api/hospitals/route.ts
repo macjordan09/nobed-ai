@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getHospitalViews } from "@/lib/hospitals";
 
-// Always serve live data — never prerender at build time (no DB exists then).
+// Always serve live data, never prerender at build time (no DB exists then).
 export const dynamic = "force-dynamic";
 
 // Public, read-only national capacity feed.

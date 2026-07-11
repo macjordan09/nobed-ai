@@ -5,8 +5,8 @@ import Link from "next/link";
 
 const STOPS = [
   { time: "11:40 PM", hospital: "Hospital A", note: "Emergency unit at full capacity.", img: "/crisis/ambulance.svg" },
-  { time: "12:25 AM", hospital: "Hospital B", note: "No ICU bed — sent on to the next facility.", img: "/crisis/ward.svg" },
-  { time: "1:10 AM", hospital: "Hospital C", note: "Theatre full — turned away at the gate.", img: "/crisis/ambulance.svg" },
+  { time: "12:25 AM", hospital: "Hospital B", note: "No ICU bed, sent on to the next facility.", img: "/crisis/ward.svg" },
+  { time: "1:10 AM", hospital: "Hospital C", note: "Theatre full, turned away at the gate.", img: "/crisis/ambulance.svg" },
   { time: "1:55 AM", hospital: "Hospital D", note: "Still searching. The clock keeps running.", img: "/crisis/ward.svg" },
 ];
 
@@ -43,13 +43,13 @@ export function CrisisSection() {
                 <span className="text-white/65">He just couldn&apos;t reach one in time.</span>
               </p>
               <p className="mt-3 text-sm text-white/55">
-                A hospital ward at 1 a.m. — and a patient still in the ambulance outside.
+                A hospital ward at 1 a.m., and a patient still in the ambulance outside.
               </p>
             </div>
           </div>
         </Reveal>
 
-        {/* Journey — media cards */}
+        {/* Journey: media cards */}
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {STOPS.map((s, i) => (
             <Reveal key={s.time} delay={i * 90}>
@@ -85,7 +85,7 @@ export function CrisisSection() {
             <span className="text-2xl font-black tracking-tight text-brand-amber sm:text-3xl">
               2h 15m on the road
             </span>
-            <span className="text-sm font-semibold text-red-300">— and still no bed.</span>
+            <span className="text-sm font-semibold text-red-300">And still no bed.</span>
           </div>
         </Reveal>
 
@@ -143,7 +143,7 @@ export function CrisisSection() {
               <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <div className="text-6xl font-black tracking-tight sm:text-7xl">12 min</div>
-                  <div className="mt-1 text-green-100">away — routed on one shared map</div>
+                  <div className="mt-1 text-green-100">away, routed on one shared map</div>
                 </div>
                 <Link
                   href="/find-beds"

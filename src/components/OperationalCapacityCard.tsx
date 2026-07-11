@@ -81,7 +81,7 @@ export function OperationalCapacityCard({ h }: { h: OperationalHospital }) {
               <span
                 key={s.label}
                 className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${a.bg} ${a.text} ${a.border}`}
-                title={s.note ? `${s.label}: ${a.label} — ${s.note}` : `${s.label}: ${a.label}`}
+                title={s.note ? `${s.label}: ${a.label}. ${s.note}` : `${s.label}: ${a.label}`}
               >
                 <span aria-hidden>{mark}</span>
                 {s.label}

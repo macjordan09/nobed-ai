@@ -3,12 +3,11 @@ import { ROLE_LABELS, type Role } from "@/lib/rbac";
 import type { Session } from "@/lib/auth";
 
 const PUBLIC_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/capacity", label: "Capacity" },
-  { href: "/find-beds", label: "Find Beds" },
-  { href: "/map", label: "Map" },
-  { href: "/sms", label: "SMS" },
-  { href: "/emergency-guide", label: "Emergency Guide" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/capacity", label: "Live Capacity" },
+  { href: "/#sms", label: "SMS Access" },
+  { href: "/#for-hospitals", label: "For Hospitals" },
+  { href: "/#partners", label: "Partners" },
   { href: "/about", label: "About" },
 ];
 
@@ -63,10 +62,16 @@ export function SiteHeader({ session }: { session: Session | null }) {
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/find-beds"
+            className="hidden rounded-lg bg-brand-red px-4 py-1.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-700 sm:inline-flex"
+          >
+            Find a Bed
+          </Link>
           {session ? (
             <>
-              <div className="hidden text-right sm:block">
+              <div className="hidden text-right lg:block">
                 <div className="text-sm font-medium leading-tight">{session.name}</div>
                 <div className="text-xs text-slate-500">{ROLE_LABELS[session.role as Role]}</div>
               </div>
@@ -82,7 +87,7 @@ export function SiteHeader({ session }: { session: Session | null }) {
           ) : (
             <Link
               href="/login"
-              className="rounded-md bg-ghana-green px-4 py-1.5 text-sm font-semibold text-white hover:bg-green-800"
+              className="rounded-md border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
             >
               Sign in
             </Link>

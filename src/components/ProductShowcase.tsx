@@ -11,9 +11,9 @@ const HospitalMap = dynamic(() => import("./HospitalMap"), {
 
 const TABS = [
   { key: "dashboard", label: "Capacity dashboard", img: "/showcase/dashboard.png", blurb: "Hospitals update beds in seconds. Status colour is calculated automatically and signed off as verified." },
-  { key: "map", label: "Live map", img: "", blurb: "One national map. Available, limited, full — and grey for unverified. Filter by region, bed type and ICU." },
+  { key: "map", label: "Live map", img: "", blurb: "One national map. Available, limited, full, and grey for unverified. Filter by region, bed type and ICU." },
   { key: "sms", label: "SMS access", img: "/showcase/sms.png", blurb: "No smartphone, no data? Text BED ACCRA and get the nearest facilities with free beds." },
-  { key: "referral", label: "Referral tracking", img: "/showcase/referral.png", blurb: "Ambulance teams refer to a hospital that can receive the patient — tracked end to end." },
+  { key: "referral", label: "Referral tracking", img: "/showcase/referral.png", blurb: "Ambulance teams refer to a hospital that can receive the patient, tracked end to end." },
 ] as const;
 
 export function ProductShowcase({ hospitals }: { hospitals: HospitalView[] }) {

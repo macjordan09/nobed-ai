@@ -18,7 +18,7 @@ const CASES = [
     date: "July 2018",
     name: "Angela Afriyie Agyemang, 30",
     place: "Suntreso Government Hospital, Kumasi",
-    body: "In labour and unable to get a theatre bed, she died — together with her unborn baby.",
+    body: "In labour and unable to get a theatre bed, she died, together with her unborn baby.",
     source: "Reported by Ghanaian media, 2018",
   },
   {

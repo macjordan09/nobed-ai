@@ -75,7 +75,7 @@ export default async function VerificationCenter() {
                     <div className="font-medium">{r.userName}</div>
                     <div className="text-xs text-slate-500">{r.email}</div>
                   </td>
-                  <td className="px-4 py-2">{r.hospitalName ?? "—"}</td>
+                  <td className="px-4 py-2">{r.hospitalName ?? "n/a"}</td>
                   <td className="px-4 py-2">
                     <span className={`pill ${REPORT_STATUS_STYLE[r.status]}`}>{r.status}</span>
                   </td>
@@ -84,7 +84,7 @@ export default async function VerificationCenter() {
                       <StaffRequestActions id={r.id} />
                     ) : (
                       <span className="text-xs text-slate-400">
-                        {r.reviewedBy ? `by ${r.reviewedBy}` : "—"}
+                        {r.reviewedBy ? `by ${r.reviewedBy}` : "n/a"}
                       </span>
                     )}
                   </td>
@@ -137,7 +137,7 @@ export default async function VerificationCenter() {
                     {r.status === "PENDING" ? (
                       <ReportActions id={r.id} />
                     ) : (
-                      <span className="text-xs text-slate-400">{r.reviewedBy ? `by ${r.reviewedBy}` : "—"}</span>
+                      <span className="text-xs text-slate-400">{r.reviewedBy ? `by ${r.reviewedBy}` : "n/a"}</span>
                     )}
                   </td>
                 </tr>

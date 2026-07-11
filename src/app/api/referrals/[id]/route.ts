@@ -69,7 +69,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       reservedBedType = referral.requiredBedType;
       resNote = ` A ${referral.requiredBedType} bed has been held for this patient.`;
     } else {
-      resNote = ` Accepted — but no free ${referral.requiredBedType} bed to hold; destination is creating space.`;
+      resNote = ` Accepted, but no free ${referral.requiredBedType} bed to hold; destination is creating space.`;
     }
   } else if ((status === "Declined" || status === "Redirected") && referral.bedReserved && referral.reservedBedType && dest) {
     await releaseBed(dest, referral.reservedBedType);

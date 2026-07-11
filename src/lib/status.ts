@@ -1,4 +1,4 @@
-// Colour-coded capacity logic — shared by API, seed and dashboards.
+// Colour-coded capacity logic, shared by API, seed and dashboards.
 //
 // Three tiers (down from four) for clarity + accessibility: yellow and amber were
 // too close to distinguish on a small pin or for colour-blind users. Status is
@@ -21,7 +21,7 @@ export const STATUS_WORD: Record<StatusColour, string> = {
 
 export const STATUS_HEX: Record<StatusColour, string> = {
   available: "#16A34A", // green
-  limited: "#D97706", // amber-600 — distinct hue + darker for AA contrast
+  limited: "#D97706", // amber-600, distinct hue + darker for AA contrast
   full: "#DC2626", // red
 };
 
@@ -42,7 +42,7 @@ export const STATUS_RANK: Record<StatusColour, number> = {
 /**
  * Capacity tier from available bed count:
  *   Full:      0 beds available
- *   Limited:   1–5 beds available, or >= 70% occupancy
+ *   Limited:   1 to 5 beds available, or >= 70% occupancy
  *   Available: more than 5 beds and < 70% occupancy
  */
 export function colourFromBeds(available: number, total: number): StatusColour {

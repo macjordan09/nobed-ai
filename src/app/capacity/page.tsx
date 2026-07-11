@@ -6,7 +6,7 @@ import { CapacityDashboard } from "@/components/CapacityDashboard";
 export const metadata: Metadata = {
   title: "Operational Capacity · noBed.ai",
   description:
-    "Real-time hospital operational capacity across Ghana — beds, ICU, oxygen, staffing, imaging, blood bank and service-specific acceptance. Routing depends on logistics, not just beds.",
+    "Real-time hospital operational capacity across Ghana: beds, ICU, oxygen, staffing, imaging, blood bank and service-specific acceptance. Routing depends on logistics, not just beds.",
 };
 
 export default function CapacityPage() {
@@ -21,11 +21,11 @@ export default function CapacityPage() {
           A bed is only real if the hospital can actually use it.
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-slate-600">
-          noBed.ai is a real-time hospital <strong>operational capacity</strong> platform — not a
+          noBed.ai is a real-time hospital <strong>operational capacity</strong> platform, not a
           bed counter. A facility can have empty beds and still be unable to admit a patient
           because oxygen is low, the ICU is full, there&apos;s no surgeon on call, the CT scanner
           is down, or nursing coverage is stretched. Whether a hospital can accept a patient
-          depends on <strong>logistics, staffing, supplies and service availability</strong> —
+          depends on <strong>logistics, staffing, supplies and service availability</strong>,
           so that&apos;s what we show.
         </p>
       </div>
@@ -38,7 +38,7 @@ export default function CapacityPage() {
             <span key={s} className="inline-flex items-center gap-2 text-xs text-slate-600">
               <span className={`inline-block h-2.5 w-2.5 rounded-full ${m.dot}`} />
               <span className="font-semibold text-slate-700">{m.label}</span>
-              <span className="text-slate-400">— {LEGEND[s]}</span>
+              <span className="text-slate-400">{LEGEND[s]}</span>
             </span>
           );
         })}
@@ -65,7 +65,7 @@ export default function CapacityPage() {
 const LEGEND: Record<string, string> = {
   available: "open across services",
   conditional: "accepting some services, not others",
-  limited: "reduced — call ahead",
+  limited: "reduced, call ahead",
   full: "saturated / diverting",
-  offline: "no live update — verify by phone",
+  offline: "no live update, verify by phone",
 };

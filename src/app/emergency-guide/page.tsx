@@ -11,7 +11,7 @@ export default function EmergencyGuidePage() {
 
       <Section title="1. Call for help first">
         <p>
-          Call 112 immediately for a life-threatening emergency — severe bleeding, chest pain,
+          Call 112 immediately for a life-threatening emergency such as severe bleeding, chest pain,
           difficulty breathing, unconsciousness, serious accidents, or labour complications. Give
           your exact location and a callback number.
         </p>
@@ -36,10 +36,10 @@ export default function EmergencyGuidePage() {
 
       <Section title="Understanding the colours">
         <ul className="space-y-2">
-          <Legend colour="#16A34A" label="Green — beds available, stable capacity" />
-          <Legend colour="#F59E0B" label="Yellow — moderate availability (3–5 beds)" />
-          <Legend colour="#EA580C" label="Amber — near capacity (1–2 beds)" />
-          <Legend colour="#DC2626" label="Red — critical / no emergency beds or unit closed" />
+          <Legend colour="#16A34A" label="Green: beds available, stable capacity" />
+          <Legend colour="#F59E0B" label="Yellow: moderate availability (3 to 5 beds)" />
+          <Legend colour="#EA580C" label="Amber: near capacity (1 to 2 beds)" />
+          <Legend colour="#DC2626" label="Red: critical, no emergency beds or unit closed" />
         </ul>
       </Section>
     </div>

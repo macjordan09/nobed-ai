@@ -1,7 +1,7 @@
-// Operational capacity model — the broader reality of "no bed".
+// Operational capacity model. The broader reality of "no bed".
 //
 // Feedback (David): a hospital can have physical beds and still be unable to accept
-// patients — oxygen, ICU capacity, physician/nurse coverage, imaging, blood bank,
+// patients. Oxygen, ICU capacity, physician/nurse coverage, imaging, blood bank,
 // theatre and logistics all gate admission. This models capacity as an operational
 // and staffing problem, not a bed count. Self-contained demo data (no DB / schema
 // change) so it always renders and never breaks the seeded portals or the mobile app.
@@ -38,12 +38,13 @@ export const STATUS_META: Record<CapacityStatus, StatusMeta> = {
     dot: "bg-red-500", solid: "bg-red-600",
   },
   conditional: {
-    label: "Conditional", short: "Conditional", glyph: "◐", hex: "#7C3AED",
-    text: "text-violet-700", bg: "bg-violet-50", border: "border-violet-200",
-    dot: "bg-violet-500", solid: "bg-violet-600",
+    // Canonical: Yellow = Conditional (distinct from Amber = Limited).
+    label: "Conditional", short: "Conditional", glyph: "◐", hex: "#EAB308",
+    text: "text-yellow-700", bg: "bg-yellow-50", border: "border-yellow-200",
+    dot: "bg-yellow-400", solid: "bg-yellow-500",
   },
   offline: {
-    label: "Offline", short: "Offline", glyph: "○", hex: "#64748B",
+    label: "Offline", short: "Offline", glyph: "○", hex: "#94A3B8",
     text: "text-slate-600", bg: "bg-slate-100", border: "border-slate-200",
     dot: "bg-slate-400", solid: "bg-slate-500",
   },
@@ -112,6 +113,8 @@ export interface OperationalHospital {
   district: string;
   facilityType: string;
   photo: string;
+  lat: number;
+  lng: number;
   status: CapacityStatus; // overall operational status
   summary: string; // one-line headline
   resources: Resource[];
@@ -145,7 +148,7 @@ export function statusCounts(): Record<CapacityStatus, number> {
   return base;
 }
 
-// ── Demo data — 6 hospitals, all five statuses represented ─────────────────
+// ── Demo data: 6 hospitals, all five statuses represented ─────────────────
 export const HOSPITALS: OperationalHospital[] = [
   {
     id: "korle-bu",
@@ -155,9 +158,11 @@ export const HOSPITALS: OperationalHospital[] = [
     district: "Ablekuma South",
     facilityType: "Teaching Hospital",
     photo: "/hospitals/photos/korle-bu.jpg",
+    lat: 5.5366,
+    lng: -0.2271,
     status: "conditional",
     summary:
-      "Accepting medical and pediatric emergencies. ICU is full and CT imaging is offline — avoid trauma and ICU referrals for now.",
+      "Accepting medical and pediatric emergencies. ICU is full and CT imaging is offline, so avoid trauma and ICU referrals for now.",
     resources: [
       { label: "Available beds", value: "8 available", tone: "good" },
       { label: "ICU capacity", value: "Full", tone: "bad", hint: "0 of 25 beds free" },
@@ -199,6 +204,8 @@ export const HOSPITALS: OperationalHospital[] = [
     district: "Korle Klottey",
     facilityType: "Regional Hospital",
     photo: "/hospitals/photos/ridge.jpg",
+    lat: 5.5641,
+    lng: -0.1969,
     status: "available",
     summary:
       "Open across all major services with full staffing and supplies. Accepting trauma, medical, obstetric, pediatric and ICU referrals.",
@@ -239,9 +246,11 @@ export const HOSPITALS: OperationalHospital[] = [
     district: "Bantama",
     facilityType: "Teaching Hospital",
     photo: "/hospitals/photos/kath.jpg",
+    lat: 6.6975,
+    lng: -1.6304,
     status: "limited",
     summary:
-      "Under pressure — oxygen supply is low and ICU is near capacity. Stabilise oxygen-dependent patients and call ahead before transfer.",
+      "Under pressure: oxygen supply is low and ICU is near capacity. Stabilise oxygen-dependent patients and call ahead before transfer.",
     resources: [
       { label: "Available beds", value: "5 available", tone: "warn" },
       { label: "ICU capacity", value: "1 bed", tone: "warn" },
@@ -262,58 +271,15 @@ export const HOSPITALS: OperationalHospital[] = [
       { label: "ICU cases", acceptance: "limited", note: "1 bed, ventilator-dependent only" },
     ],
     constraints: [
-      "Oxygen supply low — resupply expected in ~4 hours",
+      "Oxygen supply low, resupply expected in about 4 hours",
       "ICU near capacity (1 bed free)",
       "Only one operating theatre open",
     ],
     referralGuidance:
-      "Trauma, obstetric and pediatric cases accepted. Call ahead for ICU and oxygen-dependent patients — supply is constrained.",
+      "Trauma, obstetric and pediatric cases accepted. Call ahead for ICU and oxygen-dependent patients, since supply is constrained.",
     trust: {
       updatedMinutesAgo: 11,
       updatedByRole: "ED Coordinator",
-      confidence: "Medium",
-      source: "On-ground hospital staff",
-    },
-  },
-  {
-    id: "ugmc",
-    name: "University of Ghana Medical Centre",
-    shortName: "UGMC",
-    region: "Greater Accra",
-    district: "Ayawaso West",
-    facilityType: "Teaching Hospital",
-    photo: "/hospitals/photos/ugmc.jpg",
-    status: "conditional",
-    summary:
-      "Accepting most emergencies. No orthopedic surgeon on call until morning — divert complex fractures and orthopedic trauma.",
-    resources: [
-      { label: "Available beds", value: "14 available", tone: "good" },
-      { label: "ICU capacity", value: "2 beds free", tone: "good" },
-      { label: "Emergency physicians", value: "Available", tone: "good" },
-      { label: "Nurses on duty", value: "Full coverage", tone: "good" },
-      { label: "Oxygen supply", value: "Sufficient", tone: "good" },
-      { label: "Ventilators", value: "4 available", tone: "good" },
-      { label: "Blood bank", value: "Available", tone: "good" },
-      { label: "Operating theatre", value: "General open · Ortho closed", tone: "warn" },
-      { label: "CT / imaging", value: "Online", tone: "good" },
-      { label: "Ambulance acceptance", value: "Accepting", tone: "good" },
-    ],
-    services: [
-      { label: "Medical emergencies", acceptance: "yes" },
-      { label: "Trauma", acceptance: "limited", note: "No ortho cover — stable / soft-tissue only" },
-      { label: "Pediatrics", acceptance: "yes" },
-      { label: "Obstetrics", acceptance: "yes" },
-      { label: "ICU cases", acceptance: "yes" },
-    ],
-    constraints: [
-      "No orthopedic surgeon on call until 07:00",
-      "Orthopedic theatre unavailable overnight",
-    ],
-    referralGuidance:
-      "Accepting medical, obstetric, pediatric and ICU cases. Divert orthopedic trauma and complex fractures — no ortho cover until morning.",
-    trust: {
-      updatedMinutesAgo: 15,
-      updatedByRole: "Hospital Admin",
       confidence: "Medium",
       source: "On-ground hospital staff",
     },
@@ -326,9 +292,11 @@ export const HOSPITALS: OperationalHospital[] = [
     district: "Tamale Metropolis",
     facilityType: "Teaching Hospital",
     photo: "/hospitals/photos/tamale.jpg",
+    lat: 9.4402,
+    lng: -0.8393,
     status: "full",
     summary:
-      "Emergency department saturated and blood bank depleted. Diverting non-critical referrals — confirm by phone for life-threatening cases only.",
+      "Emergency department saturated and blood bank depleted. Diverting non-critical referrals. Confirm by phone for life-threatening cases only.",
     resources: [
       { label: "Available beds", value: "0 available", tone: "bad" },
       { label: "ICU capacity", value: "Full", tone: "bad" },
@@ -350,7 +318,7 @@ export const HOSPITALS: OperationalHospital[] = [
     ],
     constraints: [
       "Emergency department at full capacity",
-      "Blood bank depleted — O-negative unavailable",
+      "Blood bank depleted, O-negative unavailable",
       "No ventilators free",
     ],
     referralGuidance:
@@ -370,9 +338,11 @@ export const HOSPITALS: OperationalHospital[] = [
     district: "Cape Coast Metropolis",
     facilityType: "Teaching Hospital",
     photo: "/hospitals/photos/cape-coast.jpg",
+    lat: 5.1131,
+    lng: -1.2904,
     status: "offline",
     summary:
-      "No live update received in over 3 hours. Status is unverified — call the facility directly before routing any referral.",
+      "No live update received in over 3 hours. Status is unverified, so call the facility directly before routing any referral.",
     resources: [
       { label: "Available beds", value: "No live data", tone: "offline" },
       { label: "ICU capacity", value: "No live data", tone: "offline" },
@@ -394,7 +364,7 @@ export const HOSPITALS: OperationalHospital[] = [
     ],
     constraints: [
       "No live update in over 3 hours",
-      "Automated feed offline — awaiting manual confirmation",
+      "Automated feed offline, awaiting manual confirmation",
     ],
     referralGuidance:
       "Do not rely on this status. Call Cape Coast Teaching Hospital directly to confirm capacity before referral.",

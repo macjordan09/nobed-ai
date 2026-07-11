@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   const referral = await prisma.referral.create({
     data: {
       referralCode: makeCode(),
-      // anonymized reference only — never identifiable patient data
+      // anonymized reference only, never identifiable patient data
       patientReference: `ANON-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
       patientAgeRange: b.patientAgeRange ?? "Unknown",
       patientGender: b.patientGender ?? "Unknown",

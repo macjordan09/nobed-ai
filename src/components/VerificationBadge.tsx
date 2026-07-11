@@ -1,7 +1,7 @@
 import { VERIFICATION_LABELS, type VerificationState } from "@/lib/verification";
 
 // Verification state uses icon + text + colour (never colour alone) so it stays
-// readable for colour-blind users — important on an emergency platform.
+// readable for colour-blind users, important on an emergency platform.
 const STYLE: Record<VerificationState, { cls: string; glyph: string }> = {
   verified: { cls: "bg-green-100 text-green-800", glyph: "✓" },
   self_reported: { cls: "bg-slate-100 text-slate-600", glyph: "•" },
